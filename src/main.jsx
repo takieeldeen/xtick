@@ -81,6 +81,7 @@ const GlobalStyles = createGlobalStyle`
     font-weight: 400;
     text-rendering: optimizeLegibility;
     background-color: rgb(var(--neutral-100));
+    color: rgb(var(--neutral-950))
   }
 
   

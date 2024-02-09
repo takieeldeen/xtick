@@ -4,6 +4,8 @@ import Button from "../ui/Button";
 import { FaPause } from "react-icons/fa6";
 import { VscDebugRestart } from "react-icons/vsc";
 import { MdDone } from "react-icons/md";
+import Modal from "../ui/Modal";
+import Prompt from "../ui/Prompt";
 
 const Main = styled.main`
   display: flex;
@@ -15,6 +17,7 @@ const Main = styled.main`
 
     .date {
       font-size: 3rem;
+      color: rgb(var(--teal-950));
       span {
         font-weight: 300;
       }
@@ -71,10 +74,12 @@ const Main = styled.main`
         text-transform: uppercase;
         font-size: 3rem;
         letter-spacing: 0.15rem;
-        color: rgb(var(---teal-300));
+        color: rgb(var(--teal-950));
       }
       .session__task {
         margin-bottom: 1rem;
+        font-weight: 700;
+        color: rgb(var(--teal-900));
       }
       .session__controls {
         display: flex;
@@ -115,7 +120,7 @@ function Home() {
 
         <div className="session__info">
           <div className="session__timer">
-            <span>13:59</span>
+            <span>50:00</span>
           </div>
           <div className="tab__window tab__window--session">
             <ul className="tabs">
@@ -130,10 +135,25 @@ function Home() {
                   Working on xtick app UI (Home Page)
                 </p>
                 <div className="session__controls">
-                  <Button>
-                    <FaPause />
-                    Pause
-                  </Button>
+                  <Modal>
+                    <Modal.Open opens="pause_prompt">
+                      <Button>
+                        <FaPause />
+                        Pause
+                      </Button>
+                    </Modal.Open>
+                    <Modal.Window name="pause_prompt">
+                      <Prompt
+                        options={{
+                          title: "Pause prompt",
+                          text: "Are you sure you want to pause the session. This will lead to a pause in the whole system.",
+                          btnConfirm: "Pause",
+                          btnCancel: "Cancel",
+                        }}
+                      ></Prompt>
+                    </Modal.Window>
+                  </Modal>
+
                   <Button>
                     <VscDebugRestart />
                     Restart

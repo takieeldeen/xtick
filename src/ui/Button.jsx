@@ -17,8 +17,8 @@ const StyledButton = styled.button`
     background-color: rgb(var(--teal-700));
   }
 `;
-function Button({ children }) {
-  return <StyledButton>{children}</StyledButton>;
+function Button({ children, onClick }) {
+  return <StyledButton onClick={onClick}>{children}</StyledButton>;
 }
 
 export default Button;
