@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import TaskCard from "../ui/TaskCard";
+import TaskCard from "../features/tasks/TaskCard";
 import Button from "../ui/Button";
-import { FaPause } from "react-icons/fa6";
-import { VscDebugRestart } from "react-icons/vsc";
-import { MdDone } from "react-icons/md";
-import Modal from "../ui/Modal";
-import Prompt from "../ui/Prompt";
+import Timer from "../features/tasks/Timer";
+import { useDispatch, useSelector } from "react-redux";
+import { switchSession } from "../features/timer/timerSlice";
+import Controls from "../ui/Controls";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 const Main = styled.main`
   display: flex;
@@ -37,11 +37,13 @@ const Main = styled.main`
         font-weight: 700;
         padding-bottom: 1rem;
         position: relative;
+        transition: all 0.3s;
 
         .tab {
           user-select: none;
           padding-bottom: 0.3rem;
           cursor: pointer;
+          border-bottom: 2px solid transparent;
           transition: all 0.3s;
         }
 
@@ -49,24 +51,15 @@ const Main = styled.main`
           color: rgb(var(--teal-800));
           text-shadow: 0 0 1.5rem rgba(var(---teal-950), 1);
         }
+
         .tab--active {
-          color: rgb(var(--teal-800));
-          border-bottom: 2px solid rgb(var(--teal-800));
           cursor: default;
+          border-bottom: 2px solid rgb(var(--teal-800));
+          &:hover {
+            color: rgb(var(--teal-800));
+          }
         }
       }
-    }
-
-    .session__timer {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 5rem;
-      font-weight: 300;
-      height: 18rem;
-      width: 18rem;
-      border: 3px solid rgb(var(--teal-600));
-      border-radius: 50%;
     }
 
     .session__details {
@@ -80,11 +73,6 @@ const Main = styled.main`
         margin-bottom: 1rem;
         font-weight: 700;
         color: rgb(var(--teal-900));
-      }
-      .session__controls {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
       }
     }
     .project__details {
@@ -104,13 +92,68 @@ const Main = styled.main`
     width: 25%;
     /* background-color: red; */
     height: 100%;
+    max-height: 30rem;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin-right: 0.5rem;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      width: 0.8rem;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: rgb(var(--neutral-300));
+      border-radius: 999rem;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgb(var(--teal-800));
+      border-radius: 999rem;
+    }
+  }
+
+  .task__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    p {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: rgb(var(--teal-950));
+    }
+  }
+  .task__new {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: transparent;
+    border: none;
+    font-size: 0.8rem;
+    color: rgb(var(--teal-800));
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    .icon {
+      font-size: 1.3rem;
+    }
+    &:hover {
+      gap: 0.6rem;
+    }
   }
 `;
 function Home() {
+  const { isTicking, sessionNo, session } = useSelector((state) => state.timer);
+  const dispatch = useDispatch();
+  const task = {
+    project: "Xtick",
+    category: "Front-end",
+    title: "Design the User form",
+    description:
+      "Design the sign up form using React-hook-forms library to connect it with the database",
+    duration: 2,
+    state: "done",
+    finishingDate: new Date().toISOString(),
+  };
   return (
     <Main>
       <div className="time__board">
@@ -119,50 +162,67 @@ function Home() {
         </p>
 
         <div className="session__info">
-          <div className="session__timer">
-            <span>50:00</span>
-          </div>
+          <Timer />
           <div className="tab__window tab__window--session">
             <ul className="tabs">
-              <li className="tab tab--active">Session</li>
-              <li className="tab">Short Break</li>
-              <li className="tab">Long Break</li>
+              <li
+                className={`tab ${session === "pomodoro" ? "tab--active" : ""}`}
+              >
+                <Button
+                  type="tab"
+                  // className={`tab ${
+                  //   session === "pomodoro" ? "tab--active" : ""
+                  // }`}
+                  disabled={session === "pomodoro" ? true : false}
+                  onClick={() => dispatch(switchSession("pomodoro"))}
+                >
+                  Session
+                </Button>
+              </li>
+              <li
+                className={`tab ${
+                  session === "shortBreak" ? "tab--active" : ""
+                }`}
+                onClick={() => dispatch(switchSession("shortBreak"))}
+              >
+                <Button
+                  type="tab"
+                  // className={`tab ${
+                  //   session === "shortBreak" ? "tab--active" : ""
+                  // }`}
+                  disabled={session === "shortBreak" ? true : false}
+                  onClick={() => dispatch(switchSession("shortBreak"))}
+                >
+                  Short break
+                </Button>
+              </li>
+              <li
+                className={`tab ${
+                  session === "longBreak" ? "tab--active" : ""
+                }`}
+                onClick={() => dispatch(switchSession("pomodoro"))}
+              >
+                <Button
+                  type="tab"
+                  // className={`tab ${
+                  //   session === "longBreak" ? "tab--active" : ""
+                  // }`}
+                  disabled={session === "longBreak" ? true : false}
+                  onClick={() => dispatch(switchSession("longBreak"))}
+                >
+                  Long break
+                </Button>
+              </li>
             </ul>
             <div className="session__details">
               <div>
-                <h2>Session 2</h2>
+                <h2>
+                  {session === "pomodoro" ? `Session ${sessionNo}` : "Break"}
+                </h2>
                 <p className="session__task">
                   Working on xtick app UI (Home Page)
                 </p>
-                <div className="session__controls">
-                  <Modal>
-                    <Modal.Open opens="pause_prompt">
-                      <Button>
-                        <FaPause />
-                        Pause
-                      </Button>
-                    </Modal.Open>
-                    <Modal.Window name="pause_prompt">
-                      <Prompt
-                        options={{
-                          title: "Pause prompt",
-                          text: "Are you sure you want to pause the session. This will lead to a pause in the whole system.",
-                          btnConfirm: "Pause",
-                          btnCancel: "Cancel",
-                        }}
-                      ></Prompt>
-                    </Modal.Window>
-                  </Modal>
-
-                  <Button>
-                    <VscDebugRestart />
-                    Restart
-                  </Button>
-                  <Button>
-                    <MdDone />
-                    Finish
-                  </Button>
-                </div>
+                <Controls />
               </div>
             </div>
           </div>
@@ -179,10 +239,16 @@ function Home() {
         </div>
       </div>
       <div className="task__board">
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
+        <div className="task__heading">
+          <p>Activities</p>
+          <button className="task__new">
+            <div className="icon">
+              <IoMdAddCircleOutline />
+            </div>
+            New Activity
+          </button>
+        </div>
+        <TaskCard task={task} />
       </div>
     </Main>
   );

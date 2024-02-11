@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import Logo from "./Logo";
 import User from "./User";
+import Modal from "./Modal";
+import Settings from "../features/settings/Settings";
+import Login from "../features/Login/Login";
+import SignupForm from "../features/signup/SignupForm";
 const Nav = styled.nav`
   display: flex;
   align-items: center;
@@ -21,21 +25,41 @@ const Nav = styled.nav`
 `;
 function Navbar() {
   return (
-    <Nav>
-      <Logo />
-      <ul className="nav__menu">
-        <li>
-          <a href="#">Home</a>
-        </li>
-        <li>
-          <a href="#">login</a>
-        </li>
-        <li>
-          <a href="#">Sign up</a>
-        </li>
-      </ul>
-      <User />
-    </Nav>
+    <Modal>
+      <Nav>
+        <Logo />
+        <ul className="nav__menu">
+          <li>
+            <a href="#">Home</a>
+          </li>
+          <Modal.Open opens="settings">
+            <li>
+              <a href="#">Settings</a>
+            </li>
+          </Modal.Open>
+          <Modal.Window name="settings">
+            <Settings />
+          </Modal.Window>
+          <Modal.Open opens="login">
+            <li>
+              <a href="#">login</a>
+            </li>
+          </Modal.Open>
+          <Modal.Window name="login">
+            <Login />
+          </Modal.Window>
+          <Modal.Open opens="signup">
+            <li>
+              <a href="#">Sign up</a>
+            </li>
+          </Modal.Open>
+          <Modal.Window name="signup">
+            <SignupForm />
+          </Modal.Window>
+        </ul>
+        <User />
+      </Nav>
+    </Modal>
   );
 }
 
