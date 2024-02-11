@@ -27,6 +27,26 @@ const StyledButton = styled.button`
       return css`
         background-color: transparent;
       `;
+    } else if (props.type === "iconButton") {
+      return css`
+        font: inherit;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: transparent;
+        border: none;
+        font-size: 0.8rem;
+        color: rgb(var(--teal-800));
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.1s;
+        .icon {
+          font-size: 1.3rem;
+        }
+        &:hover {
+          gap: 0.5rem;
+        }
+      `;
     }
   }}
 `;

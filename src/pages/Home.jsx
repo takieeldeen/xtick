@@ -6,11 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { switchSession } from "../features/timer/timerSlice";
 import Controls from "../ui/Controls";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import TaskContainer from "../features/tasks/TaskContainer";
 
 const Main = styled.main`
   display: flex;
   .time__board {
-    width: 75%;
+    width: 100%;
     /* background-color: blue; */
     padding: 2rem;
     height: 100%;
@@ -88,58 +89,6 @@ const Main = styled.main`
       font-weight: 700;
     }
   }
-  .task__board {
-    width: 25%;
-    /* background-color: red; */
-    height: 100%;
-    max-height: 30rem;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-right: 0.5rem;
-    overflow-y: scroll;
-    &::-webkit-scrollbar {
-      width: 0.8rem;
-    }
-    &::-webkit-scrollbar-track {
-      background-color: rgb(var(--neutral-300));
-      border-radius: 999rem;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: rgb(var(--teal-800));
-      border-radius: 999rem;
-    }
-  }
-
-  .task__heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    p {
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: rgb(var(--teal-950));
-    }
-  }
-  .task__new {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background-color: transparent;
-    border: none;
-    font-size: 0.8rem;
-    color: rgb(var(--teal-800));
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-    .icon {
-      font-size: 1.3rem;
-    }
-    &:hover {
-      gap: 0.6rem;
-    }
-  }
 `;
 function Home() {
   const { isTicking, sessionNo, session } = useSelector((state) => state.timer);
@@ -158,7 +107,13 @@ function Home() {
     <Main>
       <div className="time__board">
         <p className="date">
-          <span>Today</span> Wednesday 7th Feb. 2024
+          <span>Today</span>{" "}
+          {new Date(Date.now()).toLocaleDateString("en-us", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </p>
 
         <div className="session__info">
@@ -170,9 +125,6 @@ function Home() {
               >
                 <Button
                   type="tab"
-                  // className={`tab ${
-                  //   session === "pomodoro" ? "tab--active" : ""
-                  // }`}
                   disabled={session === "pomodoro" ? true : false}
                   onClick={() => dispatch(switchSession("pomodoro"))}
                 >
@@ -187,9 +139,6 @@ function Home() {
               >
                 <Button
                   type="tab"
-                  // className={`tab ${
-                  //   session === "shortBreak" ? "tab--active" : ""
-                  // }`}
                   disabled={session === "shortBreak" ? true : false}
                   onClick={() => dispatch(switchSession("shortBreak"))}
                 >
@@ -204,9 +153,6 @@ function Home() {
               >
                 <Button
                   type="tab"
-                  // className={`tab ${
-                  //   session === "longBreak" ? "tab--active" : ""
-                  // }`}
                   disabled={session === "longBreak" ? true : false}
                   onClick={() => dispatch(switchSession("longBreak"))}
                 >
@@ -238,18 +184,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <div className="task__board">
-        <div className="task__heading">
-          <p>Activities</p>
-          <button className="task__new">
-            <div className="icon">
-              <IoMdAddCircleOutline />
-            </div>
-            New Activity
-          </button>
-        </div>
-        <TaskCard task={task} />
-      </div>
+      <TaskContainer />
     </Main>
   );
 }

@@ -68,6 +68,7 @@ const InputGroup = styled.div`
     font-size: 1.6rem;
     top: 50%;
     transform: translateY(-50%);
+    color: rgb(var(--neutral-100));
   }
 `;
 
@@ -92,7 +93,33 @@ const StyledInput = styled.input`
     -webkit-appearance: none;
   }
 `;
+const StyledTextArea = styled.textarea`
+  font: inherit;
+  border-radius: 0.6rem;
+  background-color: rgb(var(--teal-700));
+  font-weight: 400;
+  font-size: 1.1rem;
+  padding: 1.2rem 2.5rem 0.6rem 0.5rem;
+  border: none;
+  width: 100%;
+  color: rgb(var(--teal-50));
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    color: rgb(var(--teal-50));
+  }
+`;
 function Input({ id = "", placeholder = "", icon, ...options }) {
+  if (options.type === "textarea")
+    return (
+      <InputGroup>
+        <label htmlFor={id}>{placeholder}</label>
+        <StyledTextArea placeholder={placeholder} id={id}>
+          hello
+        </StyledTextArea>
+      </InputGroup>
+    );
   if (options.type === "checkbox")
     return (
       <CheckboxGroup>
