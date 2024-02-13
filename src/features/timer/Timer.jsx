@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useEffect } from "react";
-import { tick } from "../timer/timerSlice";
+import { tick } from "./timerSlice";
 import { formatTime } from "../../utilis/helpers";
 
 const StyledTimer = styled.div`

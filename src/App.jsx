@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Home from "./pages/Home.JSX";
 import Navbar from "./ui/Navbar";
+import toast, { Toaster } from "react-hot-toast";
 
 const AppLayout = styled.div`
   display: grid;
@@ -12,6 +13,7 @@ const AppLayout = styled.div`
 function App() {
   return (
     <AppLayout>
+      <Toaster />
       <Navbar />
       <Home />
       {/* <FlipTimer /> */}

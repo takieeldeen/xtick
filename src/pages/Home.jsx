@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import TaskCard from "../features/tasks/TaskCard";
 import Button from "../ui/Button";
-import Timer from "../features/tasks/Timer";
+import Timer from "../features/timer/Timer";
 import { useDispatch, useSelector } from "react-redux";
 import { switchSession } from "../features/timer/timerSlice";
 import Controls from "../ui/Controls";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import TaskContainer from "../features/tasks/TaskContainer";
+import { getCurrentTask } from "../features/tasks/tasksSlice";
 
 const Main = styled.main`
   display: flex;
@@ -89,8 +90,39 @@ const Main = styled.main`
       font-weight: 700;
     }
   }
+  @media (max-width: 1140px) {
+    .time__board {
+      .date {
+        font-size: 2.5rem;
+      }
+    }
+  }
+  @media (max-width: 1000px) {
+    flex-direction: column;
+  }
+
+  @media (max-width: 700px) {
+    .time__board {
+      .date {
+        font-size: 1.8rem;
+      }
+      .session__info {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+  @media (max-width: 509px) {
+    .time__board {
+      .date {
+        font-size: 1.5rem;
+      }
+    }
+  }
 `;
 function Home() {
+  const currentTask = useSelector(getCurrentTask);
+
   const { isTicking, sessionNo, session } = useSelector((state) => state.timer);
   const dispatch = useDispatch();
   const task = {
@@ -135,7 +167,6 @@ function Home() {
                 className={`tab ${
                   session === "shortBreak" ? "tab--active" : ""
                 }`}
-                onClick={() => dispatch(switchSession("shortBreak"))}
               >
                 <Button
                   type="tab"
@@ -149,7 +180,7 @@ function Home() {
                 className={`tab ${
                   session === "longBreak" ? "tab--active" : ""
                 }`}
-                onClick={() => dispatch(switchSession("pomodoro"))}
+                onClick={() => dispatch(switchSession("longBreak"))}
               >
                 <Button
                   type="tab"
@@ -166,7 +197,7 @@ function Home() {
                   {session === "pomodoro" ? `Session ${sessionNo}` : "Break"}
                 </h2>
                 <p className="session__task">
-                  Working on xtick app UI (Home Page)
+                  {currentTask?.title || `Curren't task isn't specified yet`}
                 </p>
                 <Controls />
               </div>
@@ -174,14 +205,20 @@ function Home() {
           </div>
         </div>
         <div className="project__details">
-          <div className="project__name">Xtick Project</div>
-          <div className="project__description">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam
-            voluptatem, tempora laudantium nisi exercitationem magnam neque
-            minus doloremque possimus labore dolorem minima. Reiciendis commodi
-            molestiae sed sapiente tenetur excepturi ea pariatur quam corporis
-            modi quos.
+          <div className="project__name">
+            {currentTask?.project ||
+              `Current task's project hasn't been specified yet`}{" "}
+            Project
           </div>
+          {currentTask?.project && (
+            <div className="project__description">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam
+              voluptatem, tempora laudantium nisi exercitationem magnam neque
+              minus doloremque possimus labore dolorem minima. Reiciendis
+              commodi molestiae sed sapiente tenetur excepturi ea pariatur quam
+              corporis modi quos.
+            </div>
+          )}
         </div>
       </div>
       <TaskContainer />

@@ -47,6 +47,32 @@ const StyledButton = styled.button`
           gap: 0.5rem;
         }
       `;
+    } else if (props.type === "menuButton") {
+      return css`
+        font: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        background-color: transparent;
+        border: none;
+        font-size: 0.8rem;
+        color: rgb(var(--teal-800));
+        font-weight: 700;
+        width: 100%;
+        /* min-width: 5rem; */
+        padding: 0.5rem 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        .icon {
+          font-size: 1.2rem;
+          width: auto;
+        }
+        &:hover {
+          background-color: rgb(var(--neutral-200));
+          gap: 0.3rem;
+        }
+      `;
     }
   }}
 `;

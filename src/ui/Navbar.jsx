@@ -5,6 +5,7 @@ import Modal from "./Modal";
 import Settings from "../features/settings/Settings";
 import Login from "../features/Login/Login";
 import SignupForm from "../features/signup/SignupForm";
+import Button from "./Button";
 const Nav = styled.nav`
   display: flex;
   align-items: center;
@@ -22,8 +23,13 @@ const Nav = styled.nav`
       color: #333;
     }
   }
+  .authorizationBtns {
+    display: flex;
+    gap: 1rem;
+  }
 `;
 function Navbar() {
+  const signedIn = false;
   return (
     <Modal>
       <Nav>
@@ -40,24 +46,33 @@ function Navbar() {
           <Modal.Window name="settings">
             <Settings />
           </Modal.Window>
-          <Modal.Open opens="login">
-            <li>
-              <a href="#">login</a>
-            </li>
-          </Modal.Open>
-          <Modal.Window name="login">
-            <Login />
-          </Modal.Window>
-          <Modal.Open opens="signup">
-            <li>
-              <a href="#">Sign up</a>
-            </li>
-          </Modal.Open>
-          <Modal.Window name="signup">
-            <SignupForm />
-          </Modal.Window>
         </ul>
-        <User />
+        {signedIn ? (
+          <User />
+        ) : (
+          <ul className="authorizationBtns">
+            <Modal.Open opens="login">
+              <Button
+                style={{
+                  backgroundColor: "transparent",
+                  color: `rgb(var(--teal-800))`,
+                  border: "2px solid rgb(var(--teal-800))",
+                }}
+              >
+                Login
+              </Button>
+            </Modal.Open>
+            <Modal.Window name="login">
+              <Login />
+            </Modal.Window>
+            <Modal.Open opens="signup">
+              <Button>Signup</Button>
+            </Modal.Open>
+            <Modal.Window name="signup">
+              <SignupForm />
+            </Modal.Window>
+          </ul>
+        )}
       </Nav>
     </Modal>
   );

@@ -1,12 +1,15 @@
 import { IoMdAddCircleOutline } from "react-icons/io";
 import styled from "styled-components";
 import TaskCard from "./TaskCard";
+import Message from "../../ui/Message";
 import { useState } from "react";
 import TaskForm from "./TaskForm";
 import Button from "../../ui/Button";
+import { useSelector } from "react-redux";
 const StyledTaskContainer = styled.aside`
   .task__board {
     width: 100%;
+    min-width: 20rem;
     /* background-color: red; */
     height: 100%;
     max-height: 30rem;
@@ -39,32 +42,15 @@ const StyledTaskContainer = styled.aside`
       color: rgb(var(--teal-950));
     }
   }
+  @media (max-width: 700px) {
+    .task__board {
+      min-width: 3rem;
+    }
+  }
 `;
 function TaskContainer() {
   const [createTask, setCreateTask] = useState(false);
-  const tasks = [
-    {
-      project: "Xtick",
-      category: "Front-end",
-      title: "Design the User form",
-      description:
-        "Design the sign up form using React-hook-forms library to connect it with the database",
-      duration: 2,
-      state: "done",
-      finishingDate: new Date().toISOString(),
-    },
-    {
-      project: "Xtick",
-      color: "green",
-      category: "Front-end",
-      title: "Design the User form",
-      description:
-        "Design the sign up form using React-hook-forms library to connect it with the database",
-      duration: 2,
-      state: "doing",
-      finishingDate: new Date().toISOString(),
-    },
-  ];
+  const tasks = useSelector((state) => state.tasks.tasks);
   return (
     <StyledTaskContainer>
       <div className="task__board">
@@ -82,6 +68,7 @@ function TaskContainer() {
           </Button>
         </div>
         {createTask && <TaskForm />}
+        {tasks.length === 0 ? <Message /> : ""}
         {tasks.map((task, index) => (
           <TaskCard task={task} key={index} />
         ))}

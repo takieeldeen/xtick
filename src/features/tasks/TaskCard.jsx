@@ -1,8 +1,16 @@
 import { IoIosTimer } from "react-icons/io";
 import { CiMenuKebab } from "react-icons/ci";
-import { FaCheck } from "react-icons/fa6";
+import { FaCheck, FaRegTrashCan } from "react-icons/fa6";
 
 import styled, { css } from "styled-components";
+import Menu from "../../ui/Menu";
+import Button from "../../ui/Button";
+import { FaRegEdit } from "react-icons/fa";
+import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTask, finishTask } from "./tasksSlice";
+import Modal from "../../ui/Modal";
+import TaskForm from "./TaskForm";
 const StyledTaskCard = styled.div`
   ${(props) => {
     return css`
@@ -119,20 +127,76 @@ const StyledTaskCard = styled.div`
         font-size: 1.4rem;
         cursor: pointer;
       }
+      .menuList {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        min-width: 6rem;
+        li {
+          width: 100%;
+        }
+      }
     `;
   }}
 `;
 function TaskCard({ task }) {
+  const taskRef = useRef();
+  const dispatch = useDispatch();
+  const handleDelete = function () {
+    const id = taskRef.current.dataset.id;
+    dispatch(deleteTask(id));
+  };
+  const handleDone = function () {
+    const id = +taskRef.current.dataset.id;
+    dispatch(finishTask(id));
+  };
   return (
-    <StyledTaskCard color={task.color || "blue"} taskState={task.state}>
+    <StyledTaskCard
+      ref={taskRef}
+      color={task.color || "blue"}
+      taskState={task.state}
+      data-id={task.id}
+    >
       <div className="task__header">
         <div className="task__classification">
-          <p className="task__project">{task.project}</p>
-          <p className="task__category">{task.category}</p>
+          {task.project && <p className="task__project">{task.project}</p>}
+          {task.category && <p className="task__category">{task.category}</p>}
         </div>
-        <button className="task__settings">
-          <CiMenuKebab />
-        </button>
+        <Menu>
+          <Menu.Open opens="taskSettings">
+            <button className="task__settings">
+              <CiMenuKebab />
+            </button>
+          </Menu.Open>
+          <Menu.Container name="taskSettings">
+            <ul className="menuList">
+              <li>
+                <Modal>
+                  <Modal.Open>
+                    <Button type="menuButton">
+                      <div className="icon">
+                        <FaRegEdit />
+                      </div>
+                      Edit
+                    </Button>
+                  </Modal.Open>
+                  <Modal.Window>
+                    <TaskForm purpose="edit" task={task} />
+                  </Modal.Window>
+                </Modal>
+              </li>
+              <li>
+                <Button type="menuButton" onClick={() => handleDelete()}>
+                  <div className="icon">
+                    <FaRegTrashCan />
+                  </div>
+                  Delete
+                </Button>
+              </li>
+            </ul>
+          </Menu.Container>
+        </Menu>
       </div>
       <div className="task__info">
         <p className="task__title ">{task.title}</p>
@@ -144,7 +208,7 @@ function TaskCard({ task }) {
           <IoIosTimer />
         </p>
         {task.state !== "done" && (
-          <button className="task__done">
+          <button className="task__done" onClick={handleDone}>
             <FaCheck />
           </button>
         )}

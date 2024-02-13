@@ -55,6 +55,7 @@ const InputGroup = styled.div`
   position: relative;
 
   label {
+    background-color: rgb(var(--teal-700));
     position: absolute;
     top: 0.3rem;
     left: 0.6rem;
@@ -110,14 +111,25 @@ const StyledTextArea = styled.textarea`
     color: rgb(var(--teal-50));
   }
 `;
-function Input({ id = "", placeholder = "", icon, ...options }) {
+function Input({
+  id = "",
+  placeholder = "",
+  icon,
+  innerRef = undefined,
+  ...options
+}) {
   if (options.type === "textarea")
     return (
       <InputGroup>
         <label htmlFor={id}>{placeholder}</label>
-        <StyledTextArea placeholder={placeholder} id={id}>
-          hello
-        </StyledTextArea>
+        {cloneElement(
+          <StyledTextArea
+            placeholder={placeholder}
+            id={id}
+            ref={innerRef ? innerRef : null}
+          ></StyledTextArea>,
+          options
+        )}
       </InputGroup>
     );
   if (options.type === "checkbox")
@@ -131,7 +143,14 @@ function Input({ id = "", placeholder = "", icon, ...options }) {
     <InputGroup>
       <div className="icon">{icon}</div>
       <label htmlFor={id}>{placeholder}</label>
-      {cloneElement(<StyledInput id={id} placeholder={placeholder} />, options)}
+      {cloneElement(
+        <StyledInput
+          id={id}
+          placeholder={placeholder}
+          ref={innerRef ? innerRef : null}
+        />,
+        options
+      )}
     </InputGroup>
   );
 }
